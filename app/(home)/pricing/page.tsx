@@ -16,7 +16,7 @@ export default function PricingPage() {
           Simple, transparent pricing
         </h2>
         <p className="max-w-[85%] leading-normal text-muted-foreground sm:text-lg sm:leading-7">
-          Unlock all features including unlimited posts for your blog.
+          Unlock all features including GPT-4 and Claude-2 access.
         </p>
       </div>
       <div className="grid w-full items-start gap-10 rounded-lg border p-10 md:grid-cols-[1fr_200px]">
@@ -56,11 +56,6 @@ export default function PricingPage() {
             Get Started
           </Link>
         </div>
-      </div>
-      <div className="mx-auto flex w-full max-w-[58rem] flex-col gap-4">
-        <p className="max-w-[85%] leading-normal text-muted-foreground sm:leading-7">
-          <strong>You can test the upgrade and won&apos;t be charged.</strong>
-        </p>
       </div>
     </section>
   )

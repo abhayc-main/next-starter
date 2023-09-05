@@ -1,4 +1,4 @@
-# Starter
+# IntellifyAI
 
 A quick NextJS Starter
 
@@ -22,6 +22,10 @@ A quick NextJS Starter
 - Validations using **Zod**
 - Written in **TypeScript**
 
+### Intellify Schema
+
+
+
 ## Running Locally
 
 1. Install dependencies using pnpm:
@@ -42,3 +46,6 @@ cp .env.example .env.local
 pnpm dev
 ```
 
+## License
+
+Licensed under the [MIT license](https://github.com/shadcn/taxonomy/blob/main/LICENSE.md).

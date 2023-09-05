@@ -57,47 +57,35 @@ export const RegisterAuthForm = () => {
     const email = data.email.toLowerCase();
     const username = email.substring(0, email.indexOf("@"));
 
-    try {
-      // Add the user to the database
-      const newUser = await prisma.user.create({
-        data: {
-          email: email,
-          password: hashedPassword,
-          username: username,
-          signupDate: new Date(),
-          lastLogin: null,
-          name: null,
-          emailVerified: null,
-        },
+    // Add the user to the database
+    const newUser = await prisma.user.create({
+      data: {
+        email: email,
+        password: hashedPassword,
+        username: username, // using the part before "@" as the username
+        signupDate: new Date(),
+        lastLogin: null, // set to null initially
+        name: null, // set to null or get from user input
+        emailVerified: null, // set to null initially
+      },
+    })
+
+    setPasswordsMatch(true);
+
+    setIsLoading(false);
+
+    if (newUser) {
+      // Optionally, sign the user in after registration
+      signIn("credentials", {
+        username: newUser.email,
+        password: data.password,
+        redirect: false,
+        callbackUrl: searchParams?.get("from") || "/dashboard",
       });
-
-      setPasswordsMatch(true);
-      setIsLoading(false);
-
-      if (newUser) {
-        signIn("credentials", {
-          username: newUser.email,
-          password: data.password,
-          redirect: false,
-          callbackUrl: searchParams?.get("from") || "/dashboard",
-        });
-      }
-    } catch (error) {
-      setIsLoading(false);
-      if (error.code === 'P2002' && error.meta?.target?.includes('email')) {
-        setError("email", {
-          type: "manual",
-          message: "Email already exists",
-        });
-      } else {
-        // Handle other potential errors or set a generic error message
-        setError("root", {
-          type: "manual",
-          message: "An error occurred during registration. Please try again.",
-        });
-      }
+    } else {
+      // Handle registration failure
     }
-  };
+};
 
 
   return (

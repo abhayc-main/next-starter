@@ -31,7 +31,7 @@ export type Icon = LucideIcon
 export const Icons = {
   logo: ({ ...props }) => (
     <img 
-      src="../public/logo.png" 
+      src="../public/favicon.ico" 
       alt="My Logo" 
       {...props}
     />
