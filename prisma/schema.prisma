@@ -1,0 +1,117 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                     Int           @id @default(autoincrement())
+  username               String
+  password               String        // Hashed password
+  email                  String        @unique
+  signupDate             DateTime      @default(now())
+  lastLogin              DateTime?
+  name                   String?
+  emailVerified          DateTime?
+  image                  String?
+  stripeCustomerId       String?       @unique
+  stripeSubscriptionId   String?       @unique
+  stripePriceId          String?
+  stripeCurrentPeriodEnd DateTime?
+
+  accounts    Account[]
+  sessions    Session[]
+  userCourses UserCourse[]
+  chatHistories ChatHistory[]
+  chatSessions  ChatSession[]
+}
+
+model Account {
+  id                String   @id @default(cuid())
+  userId            Int
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?  @db.Text
+  access_token      String?  @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?  @db.Text
+  session_state     String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       Int
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Course {
+  id            Int           @id @default(autoincrement())
+  name          String
+  description   String
+  pdfLink       String
+
+  userCourses UserCourse[]
+  chatHistories ChatHistory[]
+  chatSessions  ChatSession[]
+}
+
+model UserCourse {
+  userId       Int
+  courseId     Int
+  lastAccessed DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id])
+  course  Course  @relation(fields: [courseId], references: [id])
+
+  @@id([userId, courseId])
+}
+
+model ChatHistory {
+  id            Int         @id @default(autoincrement())
+  chatSessionId Int
+  timestamp     DateTime    @default(now())
+  userQuery     String
+  aiResponse    String
+  linkedPdf     String      // Linked PDF Page
+  userId        Int
+  courseId      Int
+
+  user    User    @relation(fields: [userId], references: [id])
+  course  Course  @relation(fields: [courseId], references: [id])
+  chatSession ChatSession @relation(fields: [chatSessionId], references: [id])
+}
+
+model ChatSession {
+  id          Int           @id @default(autoincrement())
+  userId      Int
+  courseId    Int
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @default(now())
+
+  user    User    @relation(fields: [userId], references: [id])
+  course  Course  @relation(fields: [courseId], references: [id])
+  chatHistories ChatHistory[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
