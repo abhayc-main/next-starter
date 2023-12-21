@@ -1,4 +1,4 @@
-# IntellifyAI
+# starter
 
 A quick NextJS Starter
 
